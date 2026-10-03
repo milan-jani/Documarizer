@@ -1,11 +1,15 @@
-# 🛡️ Prompt Injection Defense — Document Summarizer
+# 🛡️ Documarizer — Secure Document Summarization Engine
 
-> **Problem 18** | Team 18 | Marwadi University Hackathon — 3 October 2026
-> **Theme D:** Reliability, Hallucination and Safety
+Documarizer is an advanced document summarization system built to **resist prompt injection attacks** hidden inside documents. It utilizes the Google Gemini API with layered defense techniques to ensure malicious instructions embedded in documents are strictly ignored.
 
-## What is this?
+## Features
 
-A document summarizer built to **resist prompt injection attacks** hidden inside documents. It uses Google Gemini API with layered defense techniques to ensure malicious instructions embedded in documents are ignored.
+- **Prompt Injection Defense**: Robust protection against role hijacking, payload splitting, system prompt extraction, and obfuscation.
+- **Layered Security Architecture**: Combines input guardrails, output guardrails, and hierarchical system prompts.
+- **Defense Techniques**: 
+  - *XML Tag Isolation*: Wraps documents in strict XML boundary tags with an explicit instruction hierarchy.
+  - *Sandwich Defense*: Wraps untrusted text in delimiters with repeated negative constraints.
+- **Automated Attack Suite**: Built-in Python framework for continuous adversarial testing.
 
 ## Quick Start
 
@@ -19,65 +23,34 @@ pip install -r requirements.txt
 #    GEMINI_API_KEY=your_key_here
 
 # 3. Run the server
-python main.py
+python -m backend.main
 
 # 4. Open the frontend
-#    Open frontend/index.html in your browser
-#    Or navigate to http://localhost:8000
+#    Navigate to http://localhost:8000 in your browser
 ```
 
 ## Project Structure
 
 ```
-PEGAI-Hackathon/
-├── docs/                          ← Team documentation
-│   ├── 01_REQUIREMENTS.md         ← What we need to build
-│   ├── 02_ARCHITECTURE.md         ← System design & data flow
-│   ├── 03_INTERFACE_CONTRACTS.md  ← API specs & module interfaces
-│   ├── 04_TASK_ASSIGNMENTS.md     ← Who does what & when
-│   ├── 05_ATTACK_TYPES.md         ← 10 attack type definitions
-│   ├── 06_TEST_CASES.md           ← 12 labelled test cases
-│   ├── 07_PROMPT_HISTORY.md       ← Timestamped prompt log
-│   └── 08_EVALUATION_METRICS.md   ← Scoring & reporting
+Documarizer/
+├── docs/                          ← System architecture and API documentation
 ├── backend/
 │   ├── main.py                    ← FastAPI server
-│   ├── llm_service.py             ← Gemini API wrapper
-│   ├── defense.py                 ← Defense prompts (2 techniques)
-│   ├── guardrails.py              ← Input/Output validation
-│   ├── attacks.py                 ← Automated attack suite
-│   ├── logger.py                  ← Prompt history logger
-│   └── requirements.txt           ← Python dependencies
+│   ├── llm_service.py             ← Gemini API integration
+│   ├── defense.py                 ← Defense prompts engine
+│   ├── guardrails.py              ← Input/Output validation logic
+│   ├── attacks.py                 ← Automated attack testing suite
+│   └── logger.py                  ← Security audit and prompt history logger
 ├── frontend/
-│   ├── index.html
+│   ├── index.html                 ← Web UI
 │   ├── style.css
-│   └── app.js
+│   └── app.js                     ← UI logic and API client
 ├── tests/
-│   └── test_cases.json            ← Test data
-├── logs/
-│   └── prompt_history.json        ← Runtime logs
-├── .env                           ← API keys (DO NOT COMMIT)
-├── .gitignore
-└── README.md
+│   ├── run_attack_suite.py        ← Test runner
+│   ├── test_cases.json            ← Adversarial testing payloads
+│   └── test_report.json           ← Latest DSR (Defense Success Rate) results
+└── logs/                          ← Runtime execution logs
 ```
 
-## Defense Techniques
-
-1. **Sandwich Defense** — Wraps document in delimiters with repeated instructions before and after
-2. **XML Tag Isolation** — Wraps document in `<document>` tags with explicit instruction hierarchy
-
-## Team
-
-| Member | Role |
-|--------|------|
-| Member 1 | Frontend + Demo |
-| Member 2 | Backend + API |
-| Member 3 | Defense Engineering |
-| Member 4 | Attack Suite + Evaluation |
-
-## Docs for Team
-
-Start by reading these in order:
-1. [Requirements](docs/01_REQUIREMENTS.md)
-2. [Architecture](docs/02_ARCHITECTURE.md)
-3. [Interface Contracts](docs/03_INTERFACE_CONTRACTS.md)
-4. [Your Task Assignment](docs/04_TASK_ASSIGNMENTS.md)
+## Architecture Documentation
+For detailed system architecture, API contracts, and evaluation metrics, please refer to the `docs/` directory.
