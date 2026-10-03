@@ -85,6 +85,22 @@ def test_prompt_history():
     assert "entries" in data
     print("PASS: /api/prompt-history")
 
+def test_get_test_cases():
+    response = client.get("/api/test-cases")
+    assert response.status_code == 200
+    data = response.json()
+    assert data["success"] is True
+    assert data["total"] == 12
+    print(f"PASS: /api/test-cases (retrieved {data['total']} labelled cases)")
+
+def test_run_labelled_cases():
+    response = client.post("/api/run-test-cases", json={"technique": "xml_isolation", "prompt_version": "final"})
+    assert response.status_code == 200
+    data = response.json()
+    assert data["success"] is True
+    assert data["total"] == 12
+    print(f"PASS: /api/run-test-cases (pass rate: {data['pass_rate']}%)")
+
 if __name__ == "__main__":
     test_health()
     test_summarize_clean()
@@ -93,4 +109,6 @@ if __name__ == "__main__":
     test_attack_test()
     test_metrics()
     test_prompt_history()
+    test_get_test_cases()
+    test_run_labelled_cases()
     print("ALL TESTS PASSED SUCCESSFULLY!")

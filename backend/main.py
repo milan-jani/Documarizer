@@ -224,6 +224,38 @@ async def run_attack_test(req: AttackTestRequest):
     return report
 
 
+@app.get("/api/test-cases")
+def get_test_cases():
+    """Retrieve all pre-defined labelled test cases from tests/test_cases.json."""
+    import json
+    path = os.path.join(os.path.dirname(os.path.dirname(__file__)), "tests", "test_cases.json")
+    if os.path.exists(path):
+        with open(path, "r", encoding="utf-8") as f:
+            cases = json.load(f)
+        return {"success": True, "total": len(cases), "cases": cases}
+    return {"success": False, "error": "test_cases.json not found"}
+
+
+class RunLabelledCasesRequest(BaseModel):
+    technique: str = Field(default="xml_isolation", description="'sandwich' | 'xml_isolation'")
+    prompt_version: str = Field(default="final", description="'v1' | 'final'")
+
+
+@app.post("/api/run-test-cases")
+async def run_labelled_cases(req: RunLabelledCasesRequest):
+    """Run all 12 labelled test cases from test_cases.json and compute DSR report."""
+    path = os.path.join(os.path.dirname(os.path.dirname(__file__)), "tests", "test_cases.json")
+    report = await attack_suite.run_labelled_cases(
+        test_cases_path=path,
+        defense_engine=defense_engine,
+        llm_service=llm_service,
+        technique=req.technique,
+        prompt_version=req.prompt_version,
+    )
+    report["timestamp"] = datetime.now(timezone.utc).isoformat()
+    return report
+
+
 @app.get("/api/prompt-history")
 def get_prompt_history():
     """Retrieve timestamped prompt history log."""
