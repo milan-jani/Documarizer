@@ -1,0 +1,152 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Team 18 — Prompt Injection Defense</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+  <!-- ============ HEADER + TABS ============ -->
+  <header class="site-header">
+    <div class="header-inner">
+      <div>
+        <h1>Team 18 — Prompt Injection Defense</h1>
+        <p class="subtitle">A document summarizer that ignores instructions hidden inside the document</p>
+      </div>
+      <!-- Shows "Mock data" or the live backend URL (set in app.js) -->
+      <span id="mode-badge" class="mode-badge"></span>
+    </div>
+
+    <nav class="tabs" role="tablist">
+      <button class="tab active" data-tab="summarize" role="tab">Summarize</button>
+      <button class="tab" data-tab="compare" role="tab">Compare</button>
+      <button class="tab" data-tab="attack" role="tab">Attack test</button>
+      <button class="tab" data-tab="history" role="tab">Prompt history</button>
+      <button class="tab" data-tab="metrics" role="tab">Metrics</button>
+    </nav>
+  </header>
+
+  <main>
+
+    <!-- ============ TAB 1: SUMMARIZE ============ -->
+    <section id="tab-summarize" class="panel active">
+      <div class="card">
+        <h2>Summarize a document</h2>
+        <p class="hint">Paste any document. Instructions hidden inside it should be ignored.</p>
+
+        <div class="sample-row">
+          <button class="btn-ghost" data-sample="clean" data-target="sum-doc">Load clean sample</button>
+          <button class="btn-ghost" data-sample="attack" data-target="sum-doc">Load attack sample</button>
+        </div>
+
+        <textarea id="sum-doc" rows="8" placeholder="Paste document text here"></textarea>
+
+        <div class="controls">
+          <label class="field">Technique
+            <select id="sum-technique">
+              <option value="sandwich">Sandwich defense</option>
+              <option value="xml_isolation">XML isolation</option>
+            </select>
+          </label>
+          <label class="check"><input type="checkbox" id="sum-debug"> Show debug</label>
+          <button id="sum-btn" class="btn-primary">Summarize</button>
+        </div>
+        <div id="sum-error" class="error" hidden></div>
+      </div>
+
+      <div id="sum-result" class="card result" hidden></div>
+    </section>
+
+    <!-- ============ TAB 2: COMPARE ============ -->
+    <section id="tab-compare" class="panel">
+      <div class="card">
+        <h2>Compare both techniques</h2>
+        <p class="hint">The same document runs through Sandwich defense and XML isolation.</p>
+
+        <div class="sample-row">
+          <button class="btn-ghost" data-sample="clean" data-target="cmp-doc">Load clean sample</button>
+          <button class="btn-ghost" data-sample="attack" data-target="cmp-doc">Load attack sample</button>
+        </div>
+
+        <textarea id="cmp-doc" rows="8" placeholder="Paste document text here"></textarea>
+
+        <div class="controls">
+          <button id="cmp-btn" class="btn-primary">Compare</button>
+        </div>
+        <div id="cmp-error" class="error" hidden></div>
+      </div>
+
+      <div id="cmp-result" class="compare-grid" hidden></div>
+    </section>
+
+    <!-- ============ TAB 3: ATTACK TEST ============ -->
+    <section id="tab-attack" class="panel">
+      <div class="card">
+        <h2>Run the attack suite</h2>
+        <p class="hint">Each selected attack is injected into the base document, then checked against the defense.</p>
+
+        <div class="sample-row">
+          <button class="btn-ghost" data-sample="clean" data-target="atk-doc">Load clean sample</button>
+        </div>
+
+        <textarea id="atk-doc" rows="5" placeholder="Paste a clean base document here"></textarea>
+
+        <div class="attack-head">
+          <h3>Attack types</h3>
+          <button id="atk-toggle" class="btn-link">Clear all</button>
+        </div>
+        <!-- Checkboxes are created by app.js from ATTACK_TYPES -->
+        <div id="atk-types" class="attack-grid"></div>
+
+        <div class="controls">
+          <label class="field">Technique
+            <select id="atk-technique">
+              <option value="both">Both</option>
+              <option value="sandwich">Sandwich defense</option>
+              <option value="xml_isolation">XML isolation</option>
+            </select>
+          </label>
+          <button id="atk-btn" class="btn-primary">Run attacks</button>
+        </div>
+        <div id="atk-error" class="error" hidden></div>
+      </div>
+
+      <div id="atk-result" class="card result" hidden></div>
+    </section>
+
+    <!-- ============ TAB 4: PROMPT HISTORY ============ -->
+    <section id="tab-history" class="panel">
+      <div class="card">
+        <div class="result-head">
+          <h2>Prompt history</h2>
+          <button id="hist-btn" class="btn-primary">Refresh</button>
+        </div>
+        <p class="hint">Every prompt and response, timestamped. Select a row to see the full prompts.</p>
+        <div id="hist-error" class="error" hidden></div>
+        <div id="hist-result"></div>
+      </div>
+    </section>
+
+    <!-- ============ TAB 5: METRICS ============ -->
+    <section id="tab-metrics" class="panel">
+      <div class="card">
+        <div class="result-head">
+          <h2>First version vs final version</h2>
+          <button id="met-btn" class="btn-primary">Refresh</button>
+        </div>
+        <p class="hint">Defense success rate: attacks blocked out of attacks tested.</p>
+        <div id="met-error" class="error" hidden></div>
+        <div id="met-result"></div>
+      </div>
+    </section>
+
+  </main>
+
+  <script src="app.js"></script>
+</body>
+</html>
