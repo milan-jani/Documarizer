@@ -2,7 +2,7 @@
 //  CONFIG — change these two lines only
 // ================================================================
 const API_BASE = "http://localhost:8000";
-const MOCK = true; // true = fake data (no backend needed). Set false to use the real backend.
+const MOCK = false; // true = fake data (no backend needed). Set false to use the real backend.
 
 
 // ================================================================
